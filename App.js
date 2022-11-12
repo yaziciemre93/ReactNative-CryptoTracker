@@ -1,14 +1,25 @@
 import React, { useState, useEffect } from "react";
-import { ScrollView, Text, View, Image, StyleSheet } from "react-native";
+import { ScrollView, Text, View, RefreshControl } from "react-native";
 import axios from "axios";
 import Coin from "./components/Coin";
 
 export default function App() {
   const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = React.useState(false);
+
+  const wait = (timeout) => {
+    return new Promise((resolve) => setTimeout(resolve, timeout));
+  };
+
+  const onRefresh = React.useCallback(() => {
+    setRefreshing(true);
+    getData();
+    wait(2000).then(() => setRefreshing(false));
+  }, []);
 
   useEffect(() => {
     getData();
-  }, []);
+  }, [refreshing]);
 
   const getData = async () => {
     try {
@@ -28,28 +39,25 @@ export default function App() {
   };
 
   return (
-    <View className="flex-1 bg-gray-200">
-      <Text className="text-xl font-bold pt-12 pb-2 pl-5 pr-5">
+    <View className="flex-1 bg-gray-700">
+      <Text className="text-xl text-white font-bold pt-12 pb-2 pl-5 pr-5">
         Crypto Tracker
       </Text>
       <ScrollView
         showsVerticalScrollIndicator={false}
         className="space-y-1 mt-1 mb-5"
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
         {data.map((coin) => (
           <View key={coin.id}>
             <Coin
               image={coin.image}
               name={coin.name}
-              symbol={coin.symbol}
+              symbol={coin.symbol.toUpperCase()}
               current_price={coin.current_price}
               price_change_percentage_24h={coin.price_change_percentage_24h}
-            />
-            <View
-              style={{
-                borderBottomColor: "gray",
-                borderBottomWidth: StyleSheet.hairlineWidth,
-              }}
             />
           </View>
         ))}

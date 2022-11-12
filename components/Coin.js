@@ -6,13 +6,17 @@ const Coin = (props) => {
     <View className="flex-row bg-white justify-between p-1 pr-5 pl-5">
       <View className="flex-row items-center space-x-3">
         <Image className="w-10 h-10" source={{ uri: `${props.image}` }} />
-        <View>
+        <View className="justify-center">
           <Text className="text-lg font-bold">{props.name}</Text>
-          <Text className="text-lg text-gray-500">{props.symbol}</Text>
+          <Text className="text-sm font-semibold text-gray-400">
+            {props.symbol}
+          </Text>
         </View>
       </View>
       <View className="items-end">
-        <Text className="text-lg pr-1">{props.current_price}</Text>
+        <Text className="text-lg pr-1 font-semibold">
+          {(Math.round(props.current_price * 100) / 100).toFixed(2) + "$"}
+        </Text>
         <Text
           style={
             props.price_change_percentage_24h < 0 ? style.lower : style.higher
