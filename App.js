@@ -25,8 +25,7 @@ export default function App() {
     try {
       await axios
         .get(
-          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=false
-
+          `https://api.coingecko.com/api/v3/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=50&page=1&sparkline=true&price_change_percentage=1h%2C24h%2C7d
     `
         )
         .then((response) => {
@@ -39,13 +38,13 @@ export default function App() {
   };
 
   return (
-    <View className="flex-1 bg-gray-700">
+    <View className="flex-1 bg-gray-500">
       <Text className="text-xl text-white font-bold pt-12 pb-2 pl-5 pr-5">
         Crypto Tracker
       </Text>
       <ScrollView
         showsVerticalScrollIndicator={false}
-        className="space-y-1 mt-1 mb-5"
+        className="space-y-0.5 mt-1 mb-5"
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
@@ -58,6 +57,7 @@ export default function App() {
               symbol={coin.symbol.toUpperCase()}
               current_price={coin.current_price}
               price_change_percentage_24h={coin.price_change_percentage_24h}
+              data={coin.sparkline_in_7d.price}
             />
           </View>
         ))}
